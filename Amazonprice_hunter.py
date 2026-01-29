@@ -2,59 +2,68 @@
 #  products on amazon (or other e comerce platforms) and send you an email 
 # when this product drop his price
 #----------------------------------------------------------------------------------------------
-# Star importing my toolbox
-from bs4 import BeautifulSoup #read HTML
-import requests   # It is the browser that travels through the web page 
-import smtplib    #toolbox that send emails
-from email.mime.text import MIMEText      #for the email content
-from email.mime.multipart import MIMEMultipart 
-import sqlite3   
-import time   # my timer 
+# Starting importing my toolbox
+import sqlite3
+import requests
+import smtplib
+from bs4 import BeautifulSoup
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-while True :      # infinte loop that keep looking for the price deals
+def verificar_precios():
+    print('--- Verificando precios ---')
     
-    conn = sqlite3.connect('deals.db')   #open my database and read
+    # 1. Abrimos la base de datos
+    conn = sqlite3.connect('deals.db')
     cur = conn.cursor()
 
+    # Leemos de la tabla correcta
     cur.execute('SELECT * FROM products_v2')
     items = cur.fetchall()
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9"
-        }
+    }
+    
     email = 'nerio023@gmail.com'
     password = 'fwkl pydl dppr kzzg'
 
-    for item in items :   # analyzing each product 
+    for item in items:   # Analizando cada producto
         url = item[1]
         target_price = item[2]
         client_email = item[3]
         user_phone = item[4]
 
-        # HTML parsing, looking the information on the website 
-        response = requests.get(url, headers=headers)
-        soup = BeautifulSoup(response.content, 'html.parser')
-        title_element = soup.find('span', id='productTitle')
-        price_element = soup.find('span', class_='a-offscreen')
-        if title_element and price_element :
-            title = title_element.get_text().strip()   # clean the item name 
-            price = price_element.get_text().strip()    # clean the item price 
-            price_clean = price.replace(',', '').replace('$','')
-            my_price = float(price_clean) 
+        # Usamos try para que si un producto falla, el programa NO se detenga y siga con el siguiente
+        try:
+            # HTML parsing
+            response = requests.get(url, headers=headers)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            title_element = soup.find('span', id='productTitle')
+            price_element = soup.find('span', class_='a-offscreen')
+            
+            if title_element and price_element:
+                title = title_element.get_text().strip()
+                price_text = price_element.get_text().strip()
                 
-            # create the logic for the target price  
-            if target_price > my_price :
-                print('Alert your product drop his price')
+                # Limpiamos el precio ($25.99 -> 25.99)
+                price_clean = price_text.replace(',', '').replace('$', '')
+                my_price = float(price_clean) 
                 
-                if client_email and '@' in client_email:
-                        # 1. Preparamos el "contenedor" del correo
+                print(f"Revisando: {title[:15]}... | Precio: {my_price} | Meta: {target_price}")
+
+                # LOGICA DE PRECIO
+                if my_price < target_price:
+                    print('¡ALERTA! El precio ha bajado.')
+                    
+                    if client_email and '@' in client_email:
                         message = MIMEMultipart()
-                        message["Subject"] = f"🔥 Price Drop: {title[:40]}..."
+                        message["Subject"] = f"🔥 Price Drop: {title[:30]}..."
                         message["From"] = email
                         message["To"] = client_email
 
-                        # 2. create the HTML desing for the email
                         html = f"""
                         <html>
                         <body style="font-family: Arial; border: 1px solid #eee; padding: 20px;">
@@ -64,24 +73,35 @@ while True :      # infinte loop that keep looking for the price deals
                         </body>
                         </html>
                         """
-                        # 3. Metemos el HTML dentro del contenedor
+                        
                         message.attach(MIMEText(html, "html"))
+                        
                         connection = smtplib.SMTP("smtp.gmail.com", 587)
                         connection.starttls()
                         connection.login(user=email, password=password)
                         connection.sendmail(
-                        from_addr=email,
-                        to_addrs= client_email,
-                        msg=message.as_string()
+                            from_addr=email,
+                            to_addrs=client_email,
+                            msg=message.as_string()
                         )
-                        connection.close()
-                        cur.execute('''UPDATE products SET target_price = ? WHERE url = ?''', (my_price, url))
+                        connection.close() # Cerramos el servidor de correo
+                        
+                        # Actualizamos la base de datos para no enviar el mismo correo mil veces
+                        # Actualizamos el target_price al nuevo precio bajo encontrado
+                        cur.execute('''UPDATE products_v2 SET target_price = ? WHERE url = ?''', (my_price, url))
                         conn.commit()
-                        print("we'll sent you an email!")
-                if user_phone :
-                        print("we'll sent you a text message")
+                        print("Email enviado exitosamente.")
+
+                    if user_phone:
+                        print("Aquí iría la lógica para enviar SMS.")
+        
+        except Exception as e:
+            # Si hay un error con UN producto, lo imprimimos y seguimos con el siguiente
+            print(f"Error revisando {url}: {e}")
+
+    # Cerramos la base de datos AL FINAL de todo
     conn.close()
-    time.sleep(60 * 60 * 6)
+    print('--- Revisión finalizada ---')
 
 
 
