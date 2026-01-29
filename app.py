@@ -12,6 +12,9 @@ def index () :
         registrar_producto(url_product, price_product, email_costumer, phone_costumer)
     return render_template("index.html")
     
-
+@app.route('/cron-trigger')
+def cron_trigger():
+    verificar_precios()
+    return "Chequeo completado", 200
 if __name__ == '__main__':
     app.run(debug=True)
