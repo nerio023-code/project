@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from add_product import registrar_producto 
+from Amazonprice_hunter import verificar_precios
 app = Flask(__name__)
 @app.route('/',methods=['GET', 'POST'])
 def index () :
