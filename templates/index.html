@@ -2,40 +2,107 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Amazon Price Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cazador de Precios</title>
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding-top: 50px; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 400px; }
-        h2 { color: #232f3e; text-align: center; margin-bottom: 20px; }
-        label { font-size: 14px; font-weight: bold; color: #555; }
-        input { width: 100%; padding: 12px; margin: 8px 0 20px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        .optional-text { font-size: 12px; color: #888; margin-top: -15px; margin-bottom: 15px; display: block; }
-        button { width: 100%; padding: 12px; background-color: #febd69; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #f3a847; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center; /* Centrar horizontalmente */
+            align-items: center;     /* Centrar verticalmente (si hay espacio) */
+            min-height: 100vh;       /* Que ocupe al menos toda la altura */
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+            /* 2. AQUÍ ESTÁ EL TRUCO DEL TAMAÑO */
+            width: 90%;           /* En móvil ocupa casi todo el ancho */
+            max-width: 400px;     /* En PC se queda en un tamaño elegante */
+            margin: 0 auto;       /* Centrado */
+        }
+
+        h2 {
+            color: #232f3e;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px; /* Un poco más grande para dedos táctiles */
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box; /* Para que el padding no rompa el ancho */
+            font-size: 16px; /* Letra legible en móvil */
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #febd69; /* El color amarillo de Amazon */
+            color: #111;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #f3a847;
+        }
+        
+        /* Pequeño texto de ayuda */
+        .note {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Track Product</h2>
-        <form action="/" method="POST">
-            <label>Amazon Link:</label>
-            <input type="url" name="url" placeholder="https://www.amazon.com/..." required>
-            
-            <label>Target Price ($):</label>
-            <input type="number" name="price" step="0.01" placeholder="Ej: 25.99" required>
-            
-            <hr style="border: 0.5px solid #eee; margin-bottom: 20px;">
-            <p style="font-size: 13px; text-align: center; color: #666;">Where you would like to get the alert?</p>
 
-            <label>Email:</label>
-            <input type="email" name="email" placeholder="correo@ejemplo.com">
-            
-            <label>Phone Number (SMS):</label>
-            <input type="tel" name="phone" placeholder="+573001234567">
-            <span class="optional-text">* Complete at least one or two.</span>
-            
-            <button type="submit">Start Search</button>
+    <div class="container">
+        <h2>Rastreador Amazon 🎯</h2>
+        
+        <form action="/" method="POST">
+            <label>Link del Producto:</label>
+            <input type="url" name="url" placeholder="https://amazon.com/..." required>
+
+            <label>Precio Objetivo ($):</label>
+            <input type="number" name="price" step="0.01" placeholder="Ej: 25.99" required>
+
+            <label>Tu Email:</label>
+            <input type="email" name="email" placeholder="correo@ejemplo.com" required>
+
+            <label>Tu Teléfono:</label>
+            <input type="tel" name="phone" placeholder="+1234567890">
+
+            <button type="submit">¡Avísame cuando baje!</button>
         </form>
+
+        <p class="note">Te enviaremos un correo si el precio baja.</p>
     </div>
+
 </body>
 </html>
