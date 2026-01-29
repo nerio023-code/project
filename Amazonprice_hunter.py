@@ -16,7 +16,7 @@ while True :      # infinte loop that keep looking for the price deals
     conn = sqlite3.connect('deals.db')   #open my database and read
     cur = conn.cursor()
 
-    cur.execute('SELECT * FROM products')
+    cur.execute('SELECT * FROM products_v2')
     items = cur.fetchall()
 
     headers = {
