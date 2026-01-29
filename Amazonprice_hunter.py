@@ -17,7 +17,8 @@ def verificar_precios():
     cur = conn.cursor()
 
     # Leemos de la tabla correcta
-    cur.execute('SELECT * FROM products_v2')
+   # Selecciona solo 3 productos al azar para que dé tiempo en menos de 30 seg
+    cur.execute('SELECT * FROM products_v2 ORDER BY RANDOM() LIMIT 3')
     items = cur.fetchall()
 
     # Usamos headers más completos para que Amazon no nos oculte info
