@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cazador de Precios</title>
+    <title>Amazon Price Tracker</title>
     
     <style>
         body {
@@ -12,9 +12,9 @@
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center; /* Centrar horizontalmente */
-            align-items: center;     /* Centrar verticalmente (si hay espacio) */
-            min-height: 100vh;       /* Que ocupe al menos toda la altura */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .container {
@@ -22,11 +22,9 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-
-            /* 2. AQUÍ ESTÁ EL TRUCO DEL TAMAÑO */
-            width: 90%;           /* En móvil ocupa casi todo el ancho */
-            max-width: 400px;     /* En PC se queda en un tamaño elegante */
-            margin: 0 auto;       /* Centrado */
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         h2 {
@@ -46,17 +44,17 @@
 
         input {
             width: 100%;
-            padding: 12px; /* Un poco más grande para dedos táctiles */
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            box-sizing: border-box; /* Para que el padding no rompa el ancho */
-            font-size: 16px; /* Letra legible en móvil */
+            box-sizing: border-box;
+            font-size: 16px;
         }
 
         button {
             width: 100%;
             padding: 14px;
-            background-color: #febd69; /* El color amarillo de Amazon */
+            background-color: #febd69;
             color: #111;
             border: none;
             border-radius: 6px;
@@ -71,7 +69,6 @@
             background-color: #f3a847;
         }
         
-        /* Pequeño texto de ayuda */
         .note {
             font-size: 12px;
             color: #888;
@@ -83,25 +80,25 @@
 <body>
 
     <div class="container">
-        <h2>Rastreador Amazon 🎯</h2>
+        <h2>Amazon Price Tracker 🎯</h2>
         
         <form action="/" method="POST">
-            <label>Link del Producto:</label>
+            <label>Product Link:</label>
             <input type="url" name="url" placeholder="https://amazon.com/..." required>
 
-            <label>Precio Objetivo ($):</label>
-            <input type="number" name="price" step="0.01" placeholder="Ej: 25.99" required>
+            <label>Target Price ($):</label>
+            <input type="number" name="price" step="0.01" placeholder="Ex: 25.99" required>
 
-            <label>Tu Email:</label>
-            <input type="email" name="email" placeholder="correo@ejemplo.com" required>
+            <label>Your Email:</label>
+            <input type="email" name="email" placeholder="email@example.com" required>
 
-            <label>Tu Teléfono:</label>
+            <label>Your Phone:</label>
             <input type="tel" name="phone" placeholder="+1234567890">
 
-            <button type="submit">¡Avísame cuando baje!</button>
+            <button type="submit">Track Price!</button>
         </form>
 
-        <p class="note">Te enviaremos un correo si el precio baja.</p>
+        <p class="note">We'll send you an email if the price drops.</p>
     </div>
 
 </body>
